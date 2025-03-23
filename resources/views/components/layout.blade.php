@@ -16,33 +16,51 @@
         theme: {
           extend: {
             colors: {
-              laravel: '#ef3b2d',
+              laravel: '#7d0902',
+              yellow: '#f5c105',
+              grey: '#c8ccc8',
             },
           },
         },
       }
   </script>
-  <title>LaraGigs | Find Laravel Jobs & Projects</title>
+  <title>Fanvil | Criminology Review and Training Center</title>
 </head>
 
 <body class="mb-48">
   <nav class="flex justify-between items-center mb-4">
-    <a href="/"><img class="w-24" src="{{asset('images/logo.png')}}" alt="" class="logo" /></a>
-    <ul class="flex space-x-6 mr-6 text-lg">
+    <a href="/"><img class="w-24 p-2" src="{{asset('images/logo.png')}}" alt="" class="logo"/></a>
+    <ul class="flex space-x-2 mr-6 text-lg">
       @auth
+      <?php 
+        $permission = auth()->user()->permission;
+        $status = auth()->user()->status;
+      ?>
+      
       <li>
-        <span class="font-bold uppercase">
-          Welcome {{auth()->user()->name}}
+        <span class="uppercase" style="vertical-align: top">
+          {{auth()->user()->name}}
+          @if ($status == 'Premium')
+            <i class="fa-solid fa-star text-yellow"></i>
+          @endif
         </span>
       </li>
+
+      
+      
+      @if ($permission == 'admin')
       <li>
-        <a href="/listings/manage" class="hover:text-laravel"><i class="fa-solid fa-gear"></i> Manage Listings</a>
+        <a href="/listings/create" class="hover:text-gray-400"><i class="fa-solid fa-file-text mx-2"></i></a>
       </li>
+      <li>
+        <a href="/users" class="hover:text-gray-400"><i class="fa-solid fa-user mx-2"></i></a>
+      </li>
+      @endif
       <li>
         <form class="inline" method="POST" action="/logout">
           @csrf
-          <button type="submit">
-            <i class="fa-solid fa-door-closed"></i> Logout
+          <button type="submit" class="h-8 w-20 text-white rounded-lg bg-gray-500 hover:bg-gray-400">
+             Logout
           </button>
         </form>
       </li>
@@ -61,13 +79,16 @@
     {{$slot}}
   </main>
   <footer
-    class="fixed bottom-0 left-0 w-full flex items-center justify-start font-bold bg-laravel text-white h-24 mt-24 opacity-90 md:justify-center">
-    <p class="ml-2">Copyright &copy; 2022, All Rights reserved</p>
-
-    <a href="/listings/create" class="absolute top-1/3 right-10 bg-black text-white py-2 px-5">Post Job</a>
+    class="fixed bottom-0 left-0 w-full flex items-center justify-start font-bold bg-laravel text-white h-15 mt-24 opacity-70 md:justify-center text-sm">
+    <p class="ml-2">Copyright &copy; 2022, All Rights reserved.</p><a class="ml-1 text-blue-800 hover:text-blue-500" target="_blank" href="https://www.facebook.com/Fanvil-Criminology-Review-Center-1591785147769039">FACEBOOK</a>
   </footer>
 
   <x-flash-message />
 </body>
-
+<script>
+  function myFunction() {
+      if(!confirm("Are you sure you want to delete this user?"))
+      event.preventDefault();
+  }
+ </script>
 </html>

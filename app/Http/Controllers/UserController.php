@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -23,7 +24,8 @@ class UserController extends Controller
 
         // Hash Password
         $formFields['password'] = bcrypt($formFields['password']);
-
+        $formFields['permission'] = "user";
+        $formFields['status'] = "Trial";
         // Create User
         $user = User::create($formFields);
 
@@ -48,6 +50,49 @@ class UserController extends Controller
     public function login() {
         return view('users.login');
     }
+
+    //Edit User
+    public function edit(User $user) {
+        //$usr = DB::select('select * from users where id = :id', ['id' => $user->id]);
+        
+        return view('users.edit',[
+            'user' => $user
+        ]);
+    }
+
+    //Update User
+    public function update(Request $request, User $user) {
+        // Make sure logged in user is owner
+        
+        $formFields = $request->validate([
+            'name' => ['required', 'min:3'],
+            'email' => ['required', 'email'],
+        ]);
+
+        
+        $formFields['permission'] = $request->permission;
+        $formFields['status'] = $request->status;
+
+        $user->update($formFields);
+        return redirect('/users')->with('message', 'user updated successfully!');
+    }
+
+    //Manage Users
+    public function manage() {
+        return view('users.index',[
+            'users' => User::all()
+        ]);
+    }
+
+    // Delete User
+    public function destroy(User $user) {
+        $user->delete();
+        return redirect('/users')->with('message', 'Listing deleted successfully');
+    }
+
+
+
+
 
     // Authenticate User
     public function authenticate(Request $request) {

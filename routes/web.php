@@ -64,3 +64,18 @@ Route::get('/login', [UserController::class, 'login'])->name('login')->middlewar
 
 // Log In User
 Route::post('/users/authenticate', [UserController::class, 'authenticate']);
+
+//View Lesson File
+Route::get('/view/{listing}', [ListingController::class, 'view'])->middleware('auth');
+
+//Watch Lesson File 
+Route::get('/watch/{listing}', [ListingController::class, 'watch'])->middleware('auth');
+
+//View all user
+Route::get('/users', [UserController::class, 'manage'])->middleware('auth');
+//Edit user
+Route::get('/users/{user}/edit', [UserController::class, 'edit'])->middleware('auth');
+//update user
+Route::put('/users/{user}', [UserController::class, 'update'])->middleware('auth');
+//Delete user
+Route::delete('/users/{user}', [UserController::class, 'destroy'])->middleware('auth');

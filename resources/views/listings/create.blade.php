@@ -1,107 +1,85 @@
 <x-layout>
-  <x-card class="p-10 max-w-lg mx-auto mt-24">
-    <header class="text-center">
-      <h2 class="text-2xl font-bold uppercase mb-1">Create a Gig</h2>
-      <p class="mb-4">Post a gig to find a developer</p>
-    </header>
+  @if(auth()->user()->permission == 'admin')
+    <x-card class="p-10 max-w-lg mx-auto mt-24">
+      <header class="text-center">
+        <h2 class="text-2xl font-bold uppercase mb-3">Add New Lesson</h2>
+      </header>
 
-    <form method="POST" action="/listings" enctype="multipart/form-data">
-      @csrf
-      <div class="mb-6">
-        <label for="company" class="inline-block text-lg mb-2">Company Name</label>
-        <input type="text" class="border border-gray-200 rounded p-2 w-full" name="company"
-          value="{{old('company')}}" />
+      <form method="POST" action="/listings" enctype="multipart/form-data">
+        @csrf
 
-        @error('company')
-        <p class="text-red-500 text-xs mt-1">{{$message}}</p>
-        @enderror
-      </div>
+        <div style="display:inline-block;max-width:100%;text-align-last:center;">
+          <label for="subject" class="inline-block text-lg mb-2"><b>Subject Name</b></label>
+          <select name="subject" class="appearance-none w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:outline-red-400" style="width:100%">
+            <option value="">Select Subject</i></option>
+            @php
+                $index = count($subjects);
+                $i = 1;
+            @endphp
+              @foreach($subjects as $subject)
+                <option value="{{$i}}" @if(old('subject') == $i) selected @endif>{{ $subject }}</option>
+                @php
+                    $i=$i + 1;
+                @endphp
+              @endforeach
+          </select>
+          @error('subject')
+          <p class="text-red-500 text-xs mt-1">{{$message}}</p>
+          @enderror
+        </div>
 
-      <div class="mb-6">
-        <label for="title" class="inline-block text-lg mb-2">Job Title</label>
-        <input type="text" class="border border-gray-200 rounded p-2 w-full" name="title"
-          placeholder="Example: Senior Laravel Developer" value="{{old('title')}}" />
+        <div class="mb-3 mt-3">
+          <label for="lesson_name" class="inline-block text-lg mb-2"><b>Lesson Name</b></label>
+          <input type="text" class="w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:outline-red-400" name="lesson_name"
+            value="{{old('lesson_name')}}" autocomplete="off"/>
 
-        @error('title')
-        <p class="text-red-500 text-xs mt-1">{{$message}}</p>
-        @enderror
-      </div>
+          @error('lesson_name')
+          <p class="text-red-500 text-xs mt-1">{{$message}}</p>
+          @enderror
+        </div>
 
-      <div class="mb-6">
-        <label for="location" class="inline-block text-lg mb-2">Job Location</label>
-        <input type="text" class="border border-gray-200 rounded p-2 w-full" name="location"
-          placeholder="Example: Remote, Boston MA, etc" value="{{old('location')}}" />
+        <div class="mb-6">
+          <label for="website" class="inline-block text-lg mb-2">
+            <b>Lesson Url/Link</b>
+          </label>
+          <input type="text" class="w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:outline-red-400" name="website"
+            value="{{old('website')}}" autocomplete="off"/>
 
-        @error('location')
-        <p class="text-red-500 text-xs mt-1">{{$message}}</p>
-        @enderror
-      </div>
+          @error('website')
+          <p class="text-red-500 text-xs mt-1">{{$message}}</p>
+          @enderror
+        </div>
 
-      <div class="mb-6">
-        <label for="email" class="inline-block text-lg mb-2">
-          Contact Email
-        </label>
-        <input type="text" class="border border-gray-200 rounded p-2 w-full" name="email" value="{{old('email')}}" />
+        <div class="flex items-center"> 
+          <input type="checkbox" class="h-5 w-5 mr-3" name="video" value="1" class="form-check-input h-4 w-4" style="vertical-align: middle;"/>
+          <label for="video"><b>Video Lesson: </b></label>
+        </div>
 
-        @error('email')
-        <p class="text-red-500 text-xs mt-1">{{$message}}</p>
-        @enderror
-      </div>
+        <div class="mb-6 mt-5">
+          <label for="description" class="inline-block text-lg mb-2">
+            <b>Lesson Description</b>
+          </label>
+          <textarea class="appearance-none w-full border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:outline-red-400" name="description" rows="5"
+            placeholder="Add lesson description here. (Optional)">{{old('description')}}</textarea>
 
-      <div class="mb-6">
-        <label for="website" class="inline-block text-lg mb-2">
-          Website/Application URL
-        </label>
-        <input type="text" class="border border-gray-200 rounded p-2 w-full" name="website"
-          value="{{old('website')}}" />
+          @error('description')
+          <p class="text-red-500 text-xs mt-1">{{$message}}</p>
+          @enderror
+        </div>
 
-        @error('website')
-        <p class="text-red-500 text-xs mt-1">{{$message}}</p>
-        @enderror
-      </div>
+        <div class="mb-6">
+          <button class="bg-laravel text-white rounded py-2 px-4 hover:bg-black">
+            Add Lesson
+          </button>
 
-      <div class="mb-6">
-        <label for="tags" class="inline-block text-lg mb-2">
-          Tags (Comma Separated)
-        </label>
-        <input type="text" class="border border-gray-200 rounded p-2 w-full" name="tags"
-          placeholder="Example: Laravel, Backend, Postgres, etc" value="{{old('tags')}}" />
-
-        @error('tags')
-        <p class="text-red-500 text-xs mt-1">{{$message}}</p>
-        @enderror
-      </div>
-
-      <div class="mb-6">
-        <label for="logo" class="inline-block text-lg mb-2">
-          Company Logo
-        </label>
-        <input type="file" class="border border-gray-200 rounded p-2 w-full" name="logo" />
-
-        @error('logo')
-        <p class="text-red-500 text-xs mt-1">{{$message}}</p>
-        @enderror
-      </div>
-
-      <div class="mb-6">
-        <label for="description" class="inline-block text-lg mb-2">
-          Job Description
-        </label>
-        <textarea class="border border-gray-200 rounded p-2 w-full" name="description" rows="10"
-          placeholder="Include tasks, requirements, salary, etc">{{old('description')}}</textarea>
-
-        @error('description')
-        <p class="text-red-500 text-xs mt-1">{{$message}}</p>
-        @enderror
-      </div>
-
-      <div class="mb-6">
-        <button class="bg-laravel text-white rounded py-2 px-4 hover:bg-black">
-          Create Gig
-        </button>
-
-        <a href="/" class="text-black ml-4"> Back </a>
-      </div>
-    </form>
-  </x-card>
+          <a href="/" class="text-black ml-4"> Back </a>
+        </div>
+      </form>
+    </x-card>
+  @else
+    <x-card class="p-3 md:p-10 text-center">
+      <span class="text-3xl text-red-500">UNAUTHORIZED ACCESS!</span><br>
+      <span class="text-3xl text-blue-800 hover:text-blue-500 cursor-pointer hower:underline"><a href="/"> <i class="fa-solid fa-home"></i> HOME</a></span>
+    </x-card>
+  @endif
 </x-layout>
